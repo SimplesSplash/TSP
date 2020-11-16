@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<app-component xmlns="http://schemas.haulmont.com/cuba/app-component.xsd"
+               dependsOn="com.haulmont.cuba, com.haulmont.addon.restapi">
+
+    <module name="global" blocks="*">
+        <artifact name="tsp-global" appJar="true"/>
+
+        <property name="cuba.persistenceConfig" value="+com/company/tsp/persistence.xml"/>
+        <property name="cuba.metadataConfig" value="+com/company/tsp/metadata.xml"/>
+        <property name="cuba.viewsConfig" value="+com/company/tsp/views.xml"/>
+    </module>
+    <module name="core" dependsOn="global" blocks="core">
+        <artifact name="tsp-core" appJar="true"/>
+        <artifact name="tsp-core" classifier="db" ext="zip" configuration="dbscripts"/>
+
+        <property name="cuba.springContextConfig" value="+com/company/tsp/spring.xml"/>
+        <property name="cuba.mainMessagePack" value="+com.company.tsp.core"/>
+    </module>
+    <module name="web" dependsOn="global" blocks="web">
+        <artifact name="tsp-web" appJar="true"/>
+        <artifact name="tsp-web" classifier="web" ext="zip" configuration="webcontent"/>
+
+        <property name="cuba.springContextConfig" value="+com/company/tsp/web-spring.xml"/>
+        <property name="cuba.dispatcherSpringContextConfig" value="+com/company/tsp/web-dispatcher-spring.xml"/>
+        <property name="cuba.rest.servicesConfig" value="+com/company/tsp/rest-services.xml"/>
+        <property name="cuba.windowConfig" value="+com/company/tsp/web-screens.xml"/>
+        <property name="cuba.menuConfig" value="+com/company/tsp/web-menu.xml"/>
+        <property name="cuba.permissionConfig" value="+com/company/tsp/web-permissions.xml"/>
+        <property name="cuba.mainMessagePack" value="+com.company.tsp.web"/>
+    </module>
+</app-component>
