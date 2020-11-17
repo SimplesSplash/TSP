@@ -102,6 +102,8 @@ public class TSPSolver {
             updateTrails();
             updateBest();
         }
+        if (bestTourOrder == null)
+            throw new RuntimeException("Unable to find path with given constraints");
         System.out.println("Best tour length: " + bestTourLength);
         System.out.println("Best tour order: " + Arrays.toString(bestTourOrder));
         return bestTourOrder.clone();
@@ -217,18 +219,13 @@ public class TSPSolver {
 
     protected void updateBest() {
         if (bestTourOrder == null) {
-            Optional<Ant> found = Optional.empty();
-            for (Ant ant : ants) {
-                if (!antsWithBadTrails.contains(ant)) {
-                    found = Optional.of(ant);
-                    break;
-                }
-            }
-            Ant antWithFullPath = found.get();
+            Ant antWithFullPath = ants.stream().filter(ant -> !antsWithBadTrails.contains(ant))
+                    .findFirst().orElse(null);
+
             if (antWithFullPath == null)
-                throw new RuntimeException("Unable to find path with given constaints");
-            bestTourOrder =antWithFullPath.getTrail();
-            bestTourLength =antWithFullPath.trailLength(graph);
+                return;
+            bestTourOrder = antWithFullPath.getTrail();
+            bestTourLength = antWithFullPath.trailLength(graph);
         }
         for (Ant ant : ants) {
             if (!antsWithBadTrails.contains(ant)) {
